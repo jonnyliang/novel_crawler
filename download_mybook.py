@@ -2,7 +2,7 @@
 '''
 Created on 2016年11月22日
 
-@author: A2V0KZZ
+@author: Liang
 '''
 
 import urllib2
@@ -86,14 +86,20 @@ user_agent = [
 
 def get_html_content():
     url = "http://www.miaojianggushi2.com/"
-    req = urllib2.Request(url, headers={'User-Agent': user_agent[0]})
+    req = urllib2.Request(url, headers={'User-Agent': user_agent[i]})
     m = urllib2.urlopen(req).read()
     p = re.compile(r'(?<=<div id="content">).*(?=<div class="bottom">)', re.S)
     result = p.findall(m)
-    fp = open("temp_content.txt", 'w')
-    print result
-    fp.write(result[0])
-    fp.close()
+    if result:
+        fp = open("temp_content.txt", 'w')
+        fp.write(result[0])
+        fp.close()
+    else:
+        i = i+1
+        if i > 63:
+            i = 0
+        get_html_content(i)
+
 
 
 def miaojianggushi(url_list):
@@ -108,7 +114,6 @@ def miaojianggushi(url_list):
             p_content_txt = re.compile(r'(?<=<p>).*(?=</p>)')
             title_txt = p_title_txt.findall(m)
             html_content = p_content.findall(m)
-            print html_content
             if title_txt:
                 fp.write(title_txt)
                 print title_txt
